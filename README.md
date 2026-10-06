@@ -8,7 +8,17 @@ It works out of the box with a deterministic offline model, so you can clone it 
 
 [![CI](https://github.com/s-talha/agentdeck/actions/workflows/ci.yml/badge.svg)](https://github.com/s-talha/agentdeck/actions/workflows/ci.yml)
 
-<!-- Add screenshots to docs/ and link them here: agent list, live run, saved run. -->
+![A run streaming in: the agent calls the calculator, gets the result, and answers](docs/agentdeck-demo.gif)
+
+## Screenshots
+
+| Run an agent | Saved run trace |
+| --- | --- |
+| ![Agent page with a finished run and run history](docs/agent-run.png) | ![A saved run where the agent retries a failed tool call](docs/saved-run.png) |
+| **Your agents** | **Dark mode** |
+| ![List of agents with their tools and last run status](docs/agents.png) | ![Agent page in dark mode](docs/agent-run-dark.png) |
+
+In the trace, blue is the model talking, amber is a tool call, green is a tool result, and red is a failure. The saved run shows the agent recovering on its own: its first time zone guess fails, and it retries with a valid one.
 
 ## Features
 
