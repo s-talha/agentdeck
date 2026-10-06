@@ -55,8 +55,8 @@
   --color-teal-wash: var(--teal-wash);
   --color-brick: var(--brick);
   --color-brick-wash: var(--brick-wash);
-  --font-sans: var(--font-plex-sans);
-  --font-mono: var(--font-plex-mono);
+  --font-sans: var(--font-plex-sans), ui-sans-serif, system-ui, sans-serif;
+  --font-mono: var(--font-plex-mono), ui-monospace, SFMono-Regular, Menlo, monospace;
 }
 
 body {
