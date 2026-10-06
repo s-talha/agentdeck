@@ -6,7 +6,7 @@ Each agent has its own instructions and a set of tools it is allowed to call. Wh
 
 It works out of the box with a deterministic offline model, so you can clone it and try it without an API key. Add an Anthropic key and the same agents run on Claude.
 
-[![CI](https://github.com/OWNER/agentdeck/actions/workflows/ci.yml/badge.svg)](https://github.com/OWNER/agentdeck/actions/workflows/ci.yml)
+[![CI](https://github.com/s-talha/agentdeck/actions/workflows/ci.yml/badge.svg)](https://github.com/s-talha/agentdeck/actions/workflows/ci.yml)
 
 <!-- Add screenshots to docs/ and link them here: agent list, live run, saved run. -->
 
@@ -81,7 +81,7 @@ Tool failures never crash a run. Invalid input, unknown tools and timeouts come 
 Requirements: Node.js 20.9 or newer, and Docker (for Postgres) or any Postgres 15+ database.
 
 ```bash
-git clone https://github.com/OWNER/agentdeck.git
+git clone https://github.com/s-talha/agentdeck.git
 cd agentdeck
 cp .env.example .env            # then set AUTH_SECRET (npx auth secret)
 docker compose up -d db
