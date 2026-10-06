@@ -1,0 +1,95 @@
+@import "tailwindcss";
+
+/*
+ * Blueprint palette: cool paper, navy ink, one colour per kind of trace event.
+ * cobalt = the model speaking, amber = a tool call, teal = success, brick = failure.
+ */
+:root {
+  --paper: #eef1f5;
+  --panel: #ffffff;
+  --ink: #1b2433;
+  --ink-soft: #4a5568;
+  --ink-faint: #7a8699;
+  --rule: #d5dbe4;
+  --cobalt: #2f5bd3;
+  --cobalt-wash: #e4ebfb;
+  --amber: #b7791f;
+  --amber-wash: #f8eedc;
+  --teal: #1f7a6b;
+  --teal-wash: #dcf0ec;
+  --brick: #b4232a;
+  --brick-wash: #f8e1e2;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --paper: #121821;
+    --panel: #1a2230;
+    --ink: #e3e8f0;
+    --ink-soft: #aab4c3;
+    --ink-faint: #7d889a;
+    --rule: #2c3647;
+    --cobalt: #7c9cf0;
+    --cobalt-wash: #1e2a47;
+    --amber: #e0a84e;
+    --amber-wash: #33291a;
+    --teal: #5cc2ae;
+    --teal-wash: #16302b;
+    --brick: #ef7a7f;
+    --brick-wash: #3a1d20;
+  }
+}
+
+@theme inline {
+  --color-paper: var(--paper);
+  --color-panel: var(--panel);
+  --color-ink: var(--ink);
+  --color-ink-soft: var(--ink-soft);
+  --color-ink-faint: var(--ink-faint);
+  --color-rule: var(--rule);
+  --color-cobalt: var(--cobalt);
+  --color-cobalt-wash: var(--cobalt-wash);
+  --color-amber: var(--amber);
+  --color-amber-wash: var(--amber-wash);
+  --color-teal: var(--teal);
+  --color-teal-wash: var(--teal-wash);
+  --color-brick: var(--brick);
+  --color-brick-wash: var(--brick-wash);
+  --font-sans: var(--font-plex-sans);
+  --font-mono: var(--font-plex-mono);
+}
+
+body {
+  background: var(--paper);
+  color: var(--ink);
+  font-family: var(--font-plex-sans), system-ui, sans-serif;
+  font-feature-settings: "kern", "liga";
+  -webkit-font-smoothing: antialiased;
+}
+
+:focus-visible {
+  outline: 2px solid var(--cobalt);
+  outline-offset: 2px;
+}
+
+/* The one orchestrated motion: trace nodes arrive as the run streams in. */
+@keyframes node-in {
+  from {
+    opacity: 0;
+    transform: translateY(4px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+.trace-node-enter {
+  animation: node-in 220ms ease-out both;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .trace-node-enter {
+    animation: none;
+  }
+}

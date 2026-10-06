@@ -1,0 +1,134 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// ---------- Auth.js models ----------
+
+model User {
+  id            String    @id @default(cuid())
+  name          String?
+  email         String?   @unique
+  emailVerified DateTime?
+  image         String?
+  passwordHash  String?
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+
+  accounts Account[]
+  sessions Session[]
+  agents   Agent[]
+  runs     Run[]
+}
+
+model Account {
+  userId            String
+  type              String
+  provider          String
+  providerAccountId String
+  refresh_token     String?
+  access_token      String?
+  expires_at        Int?
+  token_type        String?
+  scope             String?
+  id_token          String?
+  session_state     String?
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@id([provider, providerAccountId])
+}
+
+model Session {
+  sessionToken String   @unique
+  userId       String
+  expires      DateTime
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model VerificationToken {
+  identifier String
+  token      String
+  expires    DateTime
+
+  @@id([identifier, token])
+}
+
+// ---------- Domain ----------
+
+model Agent {
+  id           String   @id @default(cuid())
+  userId       String
+  name         String
+  description  String   @default("")
+  systemPrompt String
+  tools        String[]
+  maxSteps     Int      @default(6)
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  user User  @relation(fields: [userId], references: [id], onDelete: Cascade)
+  runs Run[]
+
+  @@index([userId, updatedAt])
+}
+
+enum RunStatus {
+  RUNNING
+  SUCCEEDED
+  FAILED
+  CANCELLED
+}
+
+model Run {
+  id           String    @id @default(cuid())
+  agentId      String
+  userId       String
+  input        String
+  output       String?
+  error        String?
+  status       RunStatus @default(RUNNING)
+  model        String
+  inputTokens  Int       @default(0)
+  outputTokens Int       @default(0)
+  durationMs   Int?
+  createdAt    DateTime  @default(now())
+  finishedAt   DateTime?
+
+  agent Agent     @relation(fields: [agentId], references: [id], onDelete: Cascade)
+  user  User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  steps RunStep[]
+
+  @@index([agentId, createdAt])
+  @@index([userId, createdAt])
+}
+
+enum StepType {
+  TEXT
+  TOOL_CALL
+  TOOL_RESULT
+}
+
+model RunStep {
+  id        String   @id @default(cuid())
+  runId     String
+  index     Int
+  type      StepType
+  toolName  String?
+  content   Json
+  isError   Boolean  @default(false)
+  createdAt DateTime @default(now())
+
+  run Run @relation(fields: [runId], references: [id], onDelete: Cascade)
+
+  @@unique([runId, index])
+}

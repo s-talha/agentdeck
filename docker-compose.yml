@@ -1,0 +1,48 @@
+# Local development: `docker compose up -d db`, then `npm run dev` on the host.
+# Full stack in containers: `docker compose up --build`.
+services:
+  db:
+    image: postgres:17-alpine
+    environment:
+      POSTGRES_USER: agentdeck
+      POSTGRES_PASSWORD: agentdeck
+      POSTGRES_DB: agentdeck
+    ports:
+      - "5432:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U agentdeck"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  migrate:
+    build:
+      context: .
+      target: builder
+    command: sh -c "if [ -d prisma/migrations ]; then npx prisma migrate deploy; else npx prisma db push; fi"
+    environment:
+      DATABASE_URL: postgresql://agentdeck:agentdeck@db:5432/agentdeck?schema=public
+    depends_on:
+      db:
+        condition: service_healthy
+    profiles: ["app"]
+
+  app:
+    build: .
+    ports:
+      - "3000:3000"
+    environment:
+      DATABASE_URL: postgresql://agentdeck:agentdeck@db:5432/agentdeck?schema=public
+      AUTH_SECRET: ${AUTH_SECRET:?Set AUTH_SECRET in your shell or a .env file}
+      AUTH_TRUST_HOST: "true"
+      ANTHROPIC_API_KEY: ${ANTHROPIC_API_KEY:-}
+      ANTHROPIC_MODEL: ${ANTHROPIC_MODEL:-claude-sonnet-5-5}
+    depends_on:
+      migrate:
+        condition: service_completed_successfully
+    profiles: ["app"]
+
+volumes:
+  pgdata:
