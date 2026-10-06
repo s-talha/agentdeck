@@ -103,9 +103,9 @@ export function RunConsole({ agentId, examples }: { agentId: string; examples: s
   }
 
   return (
-    <section aria-labelledby="run-heading" className="rounded-lg border border-rule bg-panel/60">
+    <section aria-label="Run this agent" className="rounded-lg border border-rule bg-panel/60">
       <form onSubmit={start} className="border-b border-rule p-4 sm:p-5">
-        <label id="run-heading" htmlFor="task" className="block text-sm font-medium">
+        <label htmlFor="task" className="block text-sm font-medium">
           Give it a task
         </label>
         <Textarea
